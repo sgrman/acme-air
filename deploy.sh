@@ -39,10 +39,9 @@ echo
 echo "Submitting stack artifact file:"
 cat stack-artifact.yaml
 
-exit 0
-
 APL_SA_CREATE_RESULT_JSON=$(./apl stack-artifacts create -f stack-artifact.yaml -o json)
 
+echo
 echo "Result: ${APL_SA_CREATE_RESULT_JSON}"
 if [ $? -ne 0 ]
 then
@@ -53,7 +52,8 @@ fi
 # create the stack artifact and get the new ID
 APL_STACK_ARTIFACT_ID=$(echo $APL_SA_CREATE_RESULT_JSON | jq -r '.data')
 
-echo "Stack Artifact ID: $APL_DEPLOYMENT_ID"
+echo
+echo "Stack Artifact ID: ${APL_STACK_ARTIFACT_ID}"
 
 cat >deploy.yaml <<EOL
 name: ${APL_ARTIFACT_NAME}
@@ -70,12 +70,15 @@ components:
       stack_artifact_id: ${APL_STACK_ARTIFACT_ID}
 EOL
 
+echo
 echo "Submitting deployment:"
 cat deploy.yaml
 
 # deploy it
 APL_DEPLOY_CREATE_RESULT_JSON=$(./apl deployments create -f deploy.yaml -o json)
 
+echo
+echo "Result: ${APL_DEPLOY_CREATE_RESULT_JSON}"
 if [ $? -ne 0 ]
 then
     echo $APL_DEPLOY_CREATE_RESULT_JSON | jq -r '.message'
@@ -85,5 +88,6 @@ fi
 # create the stack artifact and get the new ID
 APL_DEPLOYMENT_ID=$(echo $APL_SA_CREATE_RESULT_JSON | jq -r '.data.deployment_id')
 
+echo
 echo "Deployment ID: $APL_DEPLOYMENT_ID"
 
