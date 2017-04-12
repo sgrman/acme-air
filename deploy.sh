@@ -11,12 +11,13 @@ APL_ARTIFACT_NAME=${APL_ARTIFACT_NAME:?Missing required env var}
 
 set +e
 
-#if [ -z "$TRAVIS_TAG" ]; then
-#    echo "Exiting, only deploy for tags"
-#    exit 0
-#fi
+if [ -z "$TRAVIS_TAG" ]; then
+    echo "Exiting, only deploy for tags"
+    exit 0
+fi
 
-APL_ARTIFACT_NAME="${APL_ARTIFACT_NAME}-${TRAVIS_BUILD_NUMBER}"
+#APL_ARTIFACT_NAME="${APL_ARTIFACT_NAME}-${TRAVIS_BUILD_NUMBER}"
+APL_ARTIFACT_NAME="${APL_ARTIFACT_NAME}-${TRAVIS_TAG}"
 
 APL_CMD_RELEASE=0.0.44
 APL_FILE=apl-${APL_CMD_RELEASE}-linux_amd64.tgz
@@ -32,7 +33,7 @@ tar zxf ${APL_FILE}
 cat >stack-artifact.yaml <<EOL
 loc_artifact_id: ${APL_LOC_ARTIFACT_ID}
 stack_id: ${APL_STACK_ID}
-artifact_name: https://github.com/applariat/acme-air/archive/${TRAVIS_COMMIT}.zip
+artifact_name: https://github.com/applariat/acme-air/archive/${TRAVIS_TAG}.zip
 name: ${APL_ARTIFACT_NAME}
 EOL
 
