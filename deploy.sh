@@ -27,10 +27,6 @@ echo "Downloading cli: https://github.com/applariat/go-apl/releases/download/${A
 wget https://github.com/applariat/go-apl/releases/download/${APL_CMD_RELEASE}/${APL_FILE}
 tar zxf ${APL_FILE}
 
-./apl components
-exit 0
-
-
 # Create the stack-artifact yaml to submit.
 cat >stack-artifact.yaml <<EOL
 loc_artifact_id: ${APL_LOC_ARTIFACT_ID}
@@ -40,11 +36,14 @@ name: ${APL_ARTIFACT_NAME}-${TRAVIS_TAG}
 EOL
 
 echo
-echo "Submitting stack artifact:"
+echo "Submitting stack artifact file:"
 cat stack-artifact.yaml
+
+exit 0
 
 APL_SA_CREATE_RESULT_JSON=$(./apl stack-artifacts create -f stack-artifact.yaml -o json)
 
+echo "Result: ${APL_SA_CREATE_RESULT_JSON}"
 if [ $? -ne 0 ]
 then
     echo $APL_SA_CREATE_RESULT_JSON | jq -r '.message'
