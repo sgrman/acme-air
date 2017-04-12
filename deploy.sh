@@ -11,29 +11,35 @@ APL_ARTIFACT_NAME=${APL_ARTIFACT_NAME:?Missing required env var}
 
 set +e
 
-if [ -z "$TRAVIS_TAG" ]; then
-    echo "Exiting, only deploy for tags"
-    exit 1
-fi
+#if [ -z "$TRAVIS_TAG" ]; then
+#    echo "Exiting, only deploy for tags"
+#    exit 0
+#fi
 
 
-## Download the appLariat CLI
 APL_CMD_RELEASE=0.0.44
 APL_FILE=apl-${APL_CMD_RELEASE}-linux_amd64.tgz
 if [[ "$OSTYPE" == "darwin"* ]]; then
     APL_FILE=apl-${APL_CMD_RELEASE}-darwin_amd64.tgz
 fi
+echo
+echo "Downloading cli: https://github.com/applariat/go-apl/releases/download/${APL_CMD_RELEASE}/${APL_FILE}"
 wget https://github.com/applariat/go-apl/releases/download/${APL_CMD_RELEASE}/${APL_FILE}
 tar zxf ${APL_FILE}
+
+./apl components
+exit 0
+
 
 # Create the stack-artifact yaml to submit.
 cat >stack-artifact.yaml <<EOL
 loc_artifact_id: ${APL_LOC_ARTIFACT_ID}
 stack_id: ${APL_STACK_ID}
-artifact_name: https://github.com/applariat/acme-air/archive/${APL_TAG}.zip
-name: ${APL_ARTIFACT_NAME}-${APL_TAG}
+artifact_name: https://github.com/applariat/acme-air/archive/${TRAVIS_TAG}.zip
+name: ${APL_ARTIFACT_NAME}-${TRAVIS_TAG}
 EOL
 
+echo
 echo "Submitting stack artifact:"
 cat stack-artifact.yaml
 
