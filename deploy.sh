@@ -9,7 +9,7 @@ APL_RElEASE_ID=${APL_RElEASE_ID:?Missing required env var}
 APL_STACK_COMPONENT_ID=${APL_STACK_COMPONENT_ID:?Missing required env var}
 APL_ARTIFACT_NAME=${APL_ARTIFACT_NAME:?Missing required env var}
 
-unset -e
+set +e
 
 if [ -z "$TRAVIS_TAG" ]; then
     echo "Exiting, only deploy for tags"
