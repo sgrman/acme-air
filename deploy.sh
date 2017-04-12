@@ -87,7 +87,7 @@ then
 fi
 
 # create the stack artifact and get the new ID
-APL_DEPLOYMENT_ID=$(echo $APL_SA_CREATE_RESULT_JSON | jq -r '.data.deployment_id')
+APL_DEPLOYMENT_ID=$(echo $APL_DEPLOY_CREATE_RESULT_JSON | jq -r '.data.deployment_id')
 
 echo
 echo "Deployment ID: $APL_DEPLOYMENT_ID"
