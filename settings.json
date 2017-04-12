@@ -5,7 +5,7 @@
 	"authservice_port": 9443,
 	"authContextRoot": "/acmeair-auth-service/rest/api",
 		
-	"mongoHost" : "mongo-service",
+	"mongoHost" : "mongo-svc",
 	"mongoPort" : 27017,
 	"mongoConnectionPoolSize": 10,
 
