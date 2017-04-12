@@ -16,6 +16,7 @@ set +e
 #    exit 0
 #fi
 
+APL_ARTIFACT_NAME="${APL_ARTIFACT_NAME}-${TRAVIS_BUILD_NUMBER}"
 
 APL_CMD_RELEASE=0.0.44
 APL_FILE=apl-${APL_CMD_RELEASE}-linux_amd64.tgz
@@ -32,7 +33,7 @@ cat >stack-artifact.yaml <<EOL
 loc_artifact_id: ${APL_LOC_ARTIFACT_ID}
 stack_id: ${APL_STACK_ID}
 artifact_name: https://github.com/applariat/acme-air/archive/${TRAVIS_COMMIT}.zip
-name: ${APL_ARTIFACT_NAME}-${TRAVIS_BUILD_NUMBER}
+name: ${APL_ARTIFACT_NAME}
 EOL
 
 echo
