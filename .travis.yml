@@ -9,3 +9,4 @@ env:
   - APL_RElEASE_ID: "478100eb-3f0a-4943-9188-3c8f51da57d3"
   - APL_STACK_COMPONENT_ID: "fbf91253-e1f3-47fa-85b6-b10329bebc22"
   - APL_ARTIFACT_NAME: "acme-air"
+  - APL_CMD_RELEASE: "v0.1.0"
