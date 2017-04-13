@@ -1,0 +1,12 @@
+language: generic # don't install any environment
+script:
+  - bash ./deploy.sh
+env:
+  global:
+  - APL_LOC_DEPLOY_ID: "a49bcdc9-c517-4e23-a12a-41f53a0c3a11"
+  - APL_LOC_ARTIFACT_ID: "06e0f175-6630-4182-916a-de65588eb6f6"
+  - APL_STACK_ID: "0ac7fa07-5bab-4ff0-9885-9a8f75427ecb"
+  - APL_RElEASE_ID: "478100eb-3f0a-4943-9188-3c8f51da57d3"
+  - APL_STACK_COMPONENT_ID: "fbf91253-e1f3-47fa-85b6-b10329bebc22"
+  - APL_ARTIFACT_NAME: "acme-air"
+  - APL_CMD_RELEASE: "v0.1.0"
