@@ -3,10 +3,10 @@ script:
   - bash ./deploy.sh
 env:
   global:
-  - APL_LOC_DEPLOY_ID: "a49bcdc9-c517-4e23-a12a-41f53a0c3a11"
-  - APL_LOC_ARTIFACT_ID: "06e0f175-6630-4182-916a-de65588eb6f6"
-  - APL_STACK_ID: "0ac7fa07-5bab-4ff0-9885-9a8f75427ecb"
-  - APL_RElEASE_ID: "478100eb-3f0a-4943-9188-3c8f51da57d3"
-  - APL_STACK_COMPONENT_ID: "fbf91253-e1f3-47fa-85b6-b10329bebc22"
+  - APL_LOC_DEPLOY_ID: "b7479552-6d81-481f-abed-c8f30eb3072a"
+  - APL_LOC_ARTIFACT_ID: "a9a03edf-355e-4dc8-a188-04f48c262962"
+  - APL_STACK_ID: "fb98f880-6735-4ea0-8fab-f6f25fb9fabc"
+  - APL_RElEASE_ID: "b4bcf15f-58ff-4447-aad2-4b791204118d"
+  - APL_STACK_COMPONENT_ID: "6ef668dd-e003-4962-8060-fcf65ea649e6"
   - APL_ARTIFACT_NAME: "acme-air"
   - APL_CMD_RELEASE: "v0.1.0"
