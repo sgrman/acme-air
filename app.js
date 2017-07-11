@@ -23,9 +23,8 @@ var settings = JSON.parse(fs.readFileSync('settings.json', 'utf8'));
 var logger = log4js.getLogger('app');
 logger.setLevel(settings.loggerLevel);
 
-// disable process.env.PORT for now as it cause problem on mesos slave
-var port = (process.env.VMC_APP_PORT || process.env.VCAP_APP_PORT || settings.port);
-var host = (process.env.VCAP_APP_HOST || 'localhost');
+var port = (process.env.PORT || settings.port);
+var host = (process.env.POD_IP || 'localhost');
 
 logger.info("host:port=="+host+":"+port);
 
@@ -176,7 +175,7 @@ function initDB(){
 	if (error) {
 		logger.info('Error connecting to database - exiting process: '+ error);
 		// Do not stop the process for debug in container service
-		//process.exit(1); 
+		process.exit(1); 
 	}else
 	      initialized =true;
 

@@ -57,14 +57,14 @@ module.exports = function (settings) {
 			  }
 		}
 
-		// The section is for docker integration using link
-		if (mongo ==null && process.env.MONGO_PORT!=null) {
-	        logger.info(process.env.MONGO_PORT);
-	        logger.info(process.env.MONGO_PORT_27017_TCP_ADDR);
-	        logger.info(process.env.MONGO_PORT_27017_TCP_PORT);
+		// The section is for setting 
+		if (mongo ==null && process.env.MONGO_HOST!=null) {
+	        logger.info(process.env.MONGO_HOST);
+	        //logger.info(process.env.MONGO_PORT_27017_TCP_ADDR);
+	        //logger.info(process.env.MONGO_PORT_27017_TCP_PORT);
 		    mongo = {
-			    "hostname":  process.env.MONGO_PORT_27017_TCP_ADDR,
-			    "port": process.env.MONGO_PORT_27017_TCP_PORT,
+			    "hostname":  process.env.MONGO_HOST,
+			    "port": ( process.env.MONGO_PORT || settings.mongoPort ),
 			    "username":"",
 			    "password":"",
 			    "name":"",
