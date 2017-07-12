@@ -20,6 +20,9 @@ fi
 #APL_ARTIFACT_NAME="${APL_ARTIFACT_NAME}-${TRAVIS_BUILD_NUMBER}"
 APL_ARTIFACT_NAME="${APL_ARTIFACT_NAME}-${TRAVIS_TAG}"
 
+# Make the name domain safe. // TODO: The API should handle this
+APL_ARTIFACT_NAME=${APL_ARTIFACT_NAME//[^A-Za-z0-9\\-]/-}
+
 APL_FILE=apl-${APL_CMD_RELEASE}-linux_amd64.tgz
 if [[ "$OSTYPE" == "darwin"* ]]; then
     APL_FILE=apl-${APL_CMD_RELEASE}-darwin_amd64.tgz
