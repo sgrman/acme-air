@@ -20,6 +20,9 @@ fi
 #APL_ARTIFACT_NAME="${APL_ARTIFACT_NAME}-${TRAVIS_BUILD_NUMBER}"
 APL_ARTIFACT_NAME="${APL_ARTIFACT_NAME}-${TRAVIS_TAG}"
 
+# Make the name domain safe. // TODO: The API should handle this
+APL_ARTIFACT_NAME=${APL_ARTIFACT_NAME//[^A-Za-z0-9\\-]/-}
+
 APL_FILE=apl-${APL_CMD_RELEASE}-linux_amd64.tgz
 if [[ "$OSTYPE" == "darwin"* ]]; then
     APL_FILE=apl-${APL_CMD_RELEASE}-darwin_amd64.tgz
@@ -33,6 +36,7 @@ tar zxf ${APL_FILE}
 cat >stack-artifact.yaml <<EOL
 loc_artifact_id: ${APL_LOC_ARTIFACT_ID}
 stack_id: ${APL_STACK_ID}
+stack_artifact_type: code
 artifact_name: https://github.com/applariat/acme-air/archive/${TRAVIS_TAG}.zip
 name: ${APL_ARTIFACT_NAME}
 EOL
@@ -67,9 +71,12 @@ lease_period_days: 6
 components:
 - stack_component_id: ${APL_STACK_COMPONENT_ID}
   services:
-  - component_service_id: ct-node-build
+  - component_service_id: ct-deployment
+    name: node-service
     overrides:
-      stack_artifact_id: ${APL_STACK_ARTIFACT_ID}
+      build:
+        artifacts:
+          code: ${APL_STACK_ARTIFACT_ID}
 EOL
 
 echo
