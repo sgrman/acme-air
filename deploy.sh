@@ -33,6 +33,7 @@ tar zxf ${APL_FILE}
 cat >stack-artifact.yaml <<EOL
 loc_artifact_id: ${APL_LOC_ARTIFACT_ID}
 stack_id: ${APL_STACK_ID}
+stack_artifact_type: code
 artifact_name: https://github.com/applariat/acme-air/archive/${TRAVIS_TAG}.zip
 name: ${APL_ARTIFACT_NAME}
 EOL
@@ -67,9 +68,12 @@ lease_period_days: 6
 components:
 - stack_component_id: ${APL_STACK_COMPONENT_ID}
   services:
-  - component_service_id: ct-node-build
+  - component_service_id: ct-deployment
+    name: node-service
     overrides:
-      stack_artifact_id: ${APL_STACK_ARTIFACT_ID}
+      build:
+        artifacts:
+          code: ${APL_STACK_ARTIFACT_ID}
 EOL
 
 echo
