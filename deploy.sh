@@ -12,6 +12,9 @@ APL_CMD_RELEASE=${APL_CMD_RELEASE:-v0.1.0}
 
 set +e
 
+echo "APL_API: $APL_API"
+echo
+
 if [ -z "$TRAVIS_TAG" ]; then
     echo "Exiting, only deploy for tags"
     exit 0
@@ -33,16 +36,9 @@ wget -q https://github.com/applariat/go-apl/releases/download/${APL_CMD_RELEASE}
 tar zxf ${APL_FILE}
 
 # Create the stack-artifact yaml to submit.
-#cat >stack-artifact.yaml <<EOL
-#loc_artifact_id: ${APL_LOC_ARTIFACT_ID}
-#stack_id: ${APL_STACK_ID}
-#stack_artifact_type: code
-#artifact_name: https://github.com/applariat/acme-air/archive/${TRAVIS_TAG}.zip
-#name: ${APL_ARTIFACT_NAME}
-#EOL
-
 cat >stack-artifact.yaml <<EOL
 loc_artifact_id: ${APL_LOC_ARTIFACT_ID}
+stack_id: ${APL_STACK_ID}
 stack_artifact_type: code
 artifact_name: https://github.com/applariat/acme-air/archive/${TRAVIS_TAG}.zip
 name: ${APL_ARTIFACT_NAME}
