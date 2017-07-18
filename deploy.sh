@@ -12,13 +12,18 @@ APL_CMD_RELEASE=${APL_CMD_RELEASE:-v0.1.0}
 
 set +e
 
-if [ -z "$TRAVIS_TAG" ]; then
-    echo "Exiting, only deploy for tags"
-    exit 0
-fi
+echo "APL_API: $APL_API"
+echo
+
+#if [ -z "$TRAVIS_TAG" ]; then
+#    echo "Exiting, only deploy for tags"
+#    exit 0
+#fi
 
 #APL_ARTIFACT_NAME="${APL_ARTIFACT_NAME}-${TRAVIS_BUILD_NUMBER}"
-APL_ARTIFACT_NAME="${APL_ARTIFACT_NAME}-${TRAVIS_TAG}"
+#APL_ARTIFACT_NAME="${APL_ARTIFACT_NAME}-${TRAVIS_TAG}"
+APL_ARTIFACT_NAME="QA-${TRAVIS_COMMIT}"
+
 
 # Make the name domain safe. // TODO: The API should handle this
 APL_ARTIFACT_NAME=${APL_ARTIFACT_NAME//[^A-Za-z0-9\\-]/-}
@@ -37,7 +42,8 @@ cat >stack-artifact.yaml <<EOL
 loc_artifact_id: ${APL_LOC_ARTIFACT_ID}
 stack_id: ${APL_STACK_ID}
 stack_artifact_type: code
-artifact_name: https://github.com/applariat/acme-air/archive/${TRAVIS_TAG}.zip
+#artifact_name: https://github.com/applariat/acme-air/archive/${TRAVIS_TAG}.zip
+artifact_name: https://github.com/applariat/acme-air/archive/${TRAVIS_COMMIT}.zip
 name: ${APL_ARTIFACT_NAME}
 EOL
 
@@ -99,4 +105,3 @@ APL_DEPLOYMENT_ID=$(echo $APL_DEPLOY_CREATE_RESULT_JSON | jq -r '.data.deploymen
 
 echo
 echo "Deployment ID: $APL_DEPLOYMENT_ID"
-
