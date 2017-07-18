@@ -105,4 +105,3 @@ APL_DEPLOYMENT_ID=$(echo $APL_DEPLOY_CREATE_RESULT_JSON | jq -r '.data.deploymen
 
 echo
 echo "Deployment ID: $APL_DEPLOYMENT_ID"
-
