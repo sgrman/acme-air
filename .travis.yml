@@ -4,10 +4,10 @@ script:
 env:
   global:
   - APL_LOC_DEPLOY_ID: "8ee404f4-9d01-4d82-8dc7-dcf8a99e2fc0"
-  - APL_LOC_ARTIFACT_ID: "aa459445-4427-4789-b6b8-ec59ee6e6fd5"
-  - APL_STACK_ID: "f221b703-4127-4899-ac48-441bc6e0f0e3"
-  - APL_RElEASE_ID: "f75cc0ce-f183-4861-9c26-02acf9c601b8"
-  - APL_STACK_COMPONENT_ID: "ab5f1fbe-e75e-4408-b178-a0010d1d5475"
+  - APL_LOC_ARTIFACT_ID: "90774a56-750e-42cb-9cf2-2975b050e2c2"
+  - APL_STACK_ID: "bb64c032-40d2-4a8c-bfeb-bf84ec26e7a4"
+  - APL_RElEASE_ID: "ea5beb3e-d13f-404c-87e2-f03f7b23bb9a"
+  - APL_STACK_COMPONENT_ID: "d60cb55f-71bf-4700-8f16-d0ac4c9ec88b"
   - APL_COMPONENT_SERVICE_ID: "ct-deployment"
   - APL_ARTIFACT_NAME: "acme-air"
   - APL_CMD_RELEASE: "v0.1.8"
