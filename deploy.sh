@@ -15,13 +15,15 @@ set +e
 echo "APL_API: $APL_API"
 echo
 
-if [ -z "$TRAVIS_TAG" ]; then
-    echo "Exiting, only deploy for tags"
-    exit 0
-fi
+#if [ -z "$TRAVIS_TAG" ]; then
+#    echo "Exiting, only deploy for tags"
+#    exit 0
+#fi
 
 #APL_ARTIFACT_NAME="${APL_ARTIFACT_NAME}-${TRAVIS_BUILD_NUMBER}"
-APL_ARTIFACT_NAME="${APL_ARTIFACT_NAME}-${TRAVIS_TAG}"
+#APL_ARTIFACT_NAME="${APL_ARTIFACT_NAME}-${TRAVIS_TAG}"
+APL_ARTIFACT_NAME="QA-${TRAVIS_COMMIT}"
+
 
 # Make the name domain safe. // TODO: The API should handle this
 APL_ARTIFACT_NAME=${APL_ARTIFACT_NAME//[^A-Za-z0-9\\-]/-}
