@@ -15,14 +15,19 @@ set +e
 echo "APL_API: $APL_API"
 echo
 
-#if [ -z "$TRAVIS_TAG" ]; then
-#    echo "Exiting, only deploy for tags"
-#    exit 0
-#fi
+if [ ! -z "$TRAVIS_TAG" ]; then
+    APL_ARTIFACT_NAME="STAGING-${TRAVIS_TAG}"
+    CODE_LOC=${TRAVIS_TAG}
+    QOS_LEVEL=level5
+else
+    APL_ARTIFACT_NAME="$QA-${TRAVIS_COMMIT}"
+    CODE_LOC=${TRAVIS_COMMIT}
+    QOS_LEVEL=level2
+fi
 
 #APL_ARTIFACT_NAME="${APL_ARTIFACT_NAME}-${TRAVIS_BUILD_NUMBER}"
 #APL_ARTIFACT_NAME="${APL_ARTIFACT_NAME}-${TRAVIS_TAG}"
-APL_ARTIFACT_NAME="QA-${TRAVIS_COMMIT}"
+#APL_ARTIFACT_NAME="QA-${TRAVIS_COMMIT}"
 
 
 # Make the name domain safe. // TODO: The API should handle this
@@ -42,8 +47,8 @@ cat >stack-artifact.yaml <<EOL
 loc_artifact_id: ${APL_LOC_ARTIFACT_ID}
 stack_id: ${APL_STACK_ID}
 stack_artifact_type: code
-#artifact_name: https://github.com/applariat/acme-air/archive/${TRAVIS_TAG}.zip
-artifact_name: https://github.com/applariat/acme-air/archive/${TRAVIS_COMMIT}.zip
+#artifact_name: https://github.com/applariat/acme-air/archive/${CODE_LOC}.zip
+artifact_name: https://github.com/applariat/acme-air/archive/${CODE_LOC}.zip
 name: ${APL_ARTIFACT_NAME}
 EOL
 
@@ -72,7 +77,7 @@ name: ${APL_ARTIFACT_NAME}
 release_id: ${APL_RElEASE_ID}
 loc_deploy_id: ${APL_LOC_DEPLOY_ID}
 lease_type: temporary
-qos_level: wl-level2
+qos_level: ${QOS_LEVEL}
 lease_period_days: 6
 components:
 - stack_component_id: ${APL_STACK_COMPONENT_ID}
