@@ -40,7 +40,7 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 fi
 echo
 echo "Downloading cli: https://github.com/applariat/go-apl/releases/download/${APL_CMD_RELEASE}/${APL_FILE}"
-wget -q https://github.com/applariat/go-apl/releases/download/${APL_CMD_RELEASE}/${APL_FILE}
+wget https://github.com/applariat/go-apl/releases/download/${APL_CMD_RELEASE}/${APL_FILE}
 tar zxvf ${APL_FILE}
 
 #testing
