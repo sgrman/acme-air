@@ -40,11 +40,8 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 fi
 echo
 echo "Downloading cli: https://github.com/applariat/go-apl/releases/download/${APL_CMD_RELEASE}/${APL_FILE}"
-wget https://github.com/applariat/go-apl/releases/download/${APL_CMD_RELEASE}/${APL_FILE}
-tar zxvf ${APL_FILE}
-
-#testing
-./apl -h
+wget -q https://github.com/applariat/go-apl/releases/download/${APL_CMD_RELEASE}/${APL_FILE}
+tar zxf ${APL_FILE}
 
 # Create the stack-artifact yaml to submit.
 cat >stack-artifact.yaml <<EOL
@@ -74,6 +71,45 @@ APL_STACK_ARTIFACT_ID=$(echo $APL_SA_CREATE_RESULT_JSON | jq -r '.data')
 
 echo
 echo "Stack Artifact ID: ${APL_STACK_ARTIFACT_ID}"
+
+if [ ! -z "$TRAVIS_TAG" ]; then
+cat >release.yaml <<EOL
+name: ${APL_ARTIFACT_NAME}
+stack_id: ${APL_STACK_ID}
+project_id: ${APL_PROJECT_ID}
+
+components:
+- name: mongo
+    services:
+    - name: mongo-service
+      component_service_id: ct-stateful-mongo
+      release:
+        artifacts:
+          image:
+            stack_artifact_id: 5069daa9-a30f-4434-bf7c-435060b1c973
+        runBuild: false
+        buildvars: []
+    stack_component_id: a11d7518-81ba-4364-af6d-951acb5c70f9
+  - name: node-svc
+    services:
+    - name: node-service
+      default_configuration: build
+      component_service_id: ct-deployment
+      release:
+        artifacts:
+          builder:
+            stack_artifact_id: e61131ca-4ff6-43ba-87a8-a3b6b1c14e2f
+          code:
+            stack_artifact_id: 28934fdc-a884-4d52-91ef-ca126674debd
+          image:
+            stack_artifact_id: 8b1cc91f-2471-4fec-8e3d-74c45fb198a2
+        runBuild: true
+        buildvars:
+        - value: 0
+          key: REBUILD_NUM
+    stack_component_id: 347409b8-d00e-4e85-9dc2-8cf56138b821
+EOL
+fi
 
 cat >deploy.yaml <<EOL
 name: ${APL_ARTIFACT_NAME}
