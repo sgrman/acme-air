@@ -1,3 +1,8 @@
+apl
+stack-artifact.yaml
+release.yaml
+deploy.yaml
+
 # Logs
 logs
 *.log
