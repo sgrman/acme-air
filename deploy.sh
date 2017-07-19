@@ -77,7 +77,7 @@ name: ${APL_ARTIFACT_NAME}
 release_id: ${APL_RElEASE_ID}
 loc_deploy_id: ${APL_LOC_DEPLOY_ID}
 lease_type: temporary
-workload_type : level2
+workload_type : ${QOS_LEVEL}
 lease_period_days: 6
 components:
 - stack_component_id: ${APL_STACK_COMPONENT_ID}
