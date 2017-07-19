@@ -47,7 +47,6 @@ cat >stack-artifact.yaml <<EOL
 loc_artifact_id: ${APL_LOC_ARTIFACT_ID}
 stack_id: ${APL_STACK_ID}
 stack_artifact_type: code
-#artifact_name: https://github.com/applariat/acme-air/archive/${CODE_LOC}.zip
 artifact_name: https://github.com/applariat/acme-air/archive/${CODE_LOC}.zip
 name: ${APL_ARTIFACT_NAME}
 EOL
