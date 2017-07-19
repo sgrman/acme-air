@@ -41,7 +41,10 @@ fi
 echo
 echo "Downloading cli: https://github.com/applariat/go-apl/releases/download/${APL_CMD_RELEASE}/${APL_FILE}"
 wget -q https://github.com/applariat/go-apl/releases/download/${APL_CMD_RELEASE}/${APL_FILE}
-tar zxf ${APL_FILE}
+tar zxvf ${APL_FILE}
+
+#testing
+./apl -h
 
 # Create the stack-artifact yaml to submit.
 cat >stack-artifact.yaml <<EOL
