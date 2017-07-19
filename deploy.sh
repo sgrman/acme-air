@@ -20,7 +20,7 @@ if [ ! -z "$TRAVIS_TAG" ]; then
     CODE_LOC=${TRAVIS_TAG}
     QOS_LEVEL=level5
 else
-    TRAVIS_COMMIT=`echo $TRAVIS_COMMIT |cut -c 1-8`
+    TRAVIS_COMMIT=`echo $TRAVIS_COMMIT |cut -c 1-12`
     APL_ARTIFACT_NAME="QA-${TRAVIS_COMMIT}"
     CODE_LOC=${TRAVIS_COMMIT}
     QOS_LEVEL=level2
