@@ -33,16 +33,16 @@ fi
 
 
 ## Make the name domain safe. // TODO: The API should handle this
-#APL_ARTIFACT_NAME=${APL_ARTIFACT_NAME//[^A-Za-z0-9\\-]/-}
-#
-#APL_FILE=apl-${APL_CMD_RELEASE}-linux_amd64.tgz
-#if [[ "$OSTYPE" == "darwin"* ]]; then
-#    APL_FILE=apl-${APL_CMD_RELEASE}-darwin_amd64.tgz
-#fi
-#echo
-#echo "Downloading cli: https://github.com/applariat/go-apl/releases/download/${APL_CMD_RELEASE}/${APL_FILE}"
-#wget -q https://github.com/applariat/go-apl/releases/download/${APL_CMD_RELEASE}/${APL_FILE}
-#tar zxf ${APL_FILE}
+APL_ARTIFACT_NAME=${APL_ARTIFACT_NAME//[^A-Za-z0-9\\-]/-}
+
+APL_FILE=apl-${APL_CMD_RELEASE}-linux_amd64.tgz
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    APL_FILE=apl-${APL_CMD_RELEASE}-darwin_amd64.tgz
+fi
+echo
+echo "Downloading cli: https://github.com/applariat/go-apl/releases/download/${APL_CMD_RELEASE}/${APL_FILE}"
+wget -q https://github.com/applariat/go-apl/releases/download/${APL_CMD_RELEASE}/${APL_FILE}
+tar zxf ${APL_FILE}
 
 echo
 echo "Submitting stack artifact file:"
