@@ -16,6 +16,12 @@ set +e
 echo "APL_API: $APL_API"
 echo
 
+if [ "$TRAVIS_BRANCH" != "develop"  ]
+then
+    echo "Exiting, only deploy for develop"
+    exit 0
+fi
+
 if [ ! -z "$TRAVIS_TAG" ]; then
     APL_ARTIFACT_NAME="STAGING-${TRAVIS_TAG}"
     CODE_LOC=${TRAVIS_TAG}
