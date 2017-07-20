@@ -18,11 +18,11 @@ echo
 echo "TRAVIS_BRANCH: $TRAVIS_BRANCH"
 
 
-#if [ "$TRAVIS_BRANCH" != "develop"  ]
-#then
-#    echo "Exiting, only deploy for develop"
-#    exit 0
-#fi
+if [ "$TRAVIS_BRANCH" = "Jira-700"  ]
+then
+    echo "Exiting, not building for Jira-700"
+    exit 0
+fi
 
 
 if [ ! -z "$TRAVIS_TAG" ]; then
