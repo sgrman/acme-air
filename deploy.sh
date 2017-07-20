@@ -15,6 +15,7 @@ set +e
 
 echo "APL_API: $APL_API"
 echo
+echo "TRAVIS_BRANCH: $TRAVIS_BRANCH"
 
 if [ "$TRAVIS_BRANCH" != "develop"  ]
 then
