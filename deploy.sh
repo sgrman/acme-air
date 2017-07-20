@@ -89,8 +89,20 @@ components:
     - name: node-service
       release:
         artifacts:
+          builder:
+            stack_artifact_id: e61131ca-4ff6-43ba-87a8-a3b6b1c14e2f
           code:
             stack_artifact_id: ${APL_STACK_ARTIFACT_ID}
+          image:
+            stack_artifact_id: 8b1cc91f-2471-4fec-8e3d-74c45fb198a2
+  - name: mongo
+    stack_component_id: a11d7518-81ba-4364-af6d-951acb5c70f9
+    services:
+    - name: mongo-service
+      release:
+        artifacts:
+          image:
+            stack_artifact_id: 5069daa9-a30f-4434-bf7c-435060b1c973
 EOL
 
 #    APL_RELEASE_CREATE_RESULT_JSON=$(./apl releases create \
