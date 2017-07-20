@@ -22,6 +22,7 @@ then
     exit 0
 fi
 
+
 if [ ! -z "$TRAVIS_TAG" ]; then
     APL_ARTIFACT_NAME="STAGING-${TRAVIS_TAG}"
     CODE_LOC=${TRAVIS_TAG}
