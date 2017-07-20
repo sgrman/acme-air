@@ -18,11 +18,11 @@ echo
 echo "TRAVIS_BRANCH: $TRAVIS_BRANCH"
 
 
-if [ "$TRAVIS_BRANCH" != "develop"  ]
-then
-    echo "Exiting, only deploy for develop"
-    exit 0
-fi
+#if [ "$TRAVIS_BRANCH" != "develop"  ]
+#then
+#    echo "Exiting, only deploy for develop"
+#    exit 0
+#fi
 
 
 if [ ! -z "$TRAVIS_TAG" ]; then
