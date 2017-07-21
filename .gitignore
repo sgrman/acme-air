@@ -2,6 +2,7 @@ apl
 stack-artifact.yaml
 release.yaml
 deploy.yaml
+.project
 
 # Logs
 logs
