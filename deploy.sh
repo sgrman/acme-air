@@ -92,19 +92,19 @@ components:
       release:
         artifacts:
           builder:
-            stack_artifact_id: e61131ca-4ff6-43ba-87a8-a3b6b1c14e2f
+            stack_artifact_id: 2f9b4607-1034-446c-817e-ce59b56cc631
           code:
             stack_artifact_id: ${APL_STACK_ARTIFACT_ID}
           image:
-            stack_artifact_id: 8b1cc91f-2471-4fec-8e3d-74c45fb198a2
+            stack_artifact_id: 7f0b2e90-8757-47ed-bb70-c5c091a0b681
   - name: mongo
-    stack_component_id: a11d7518-81ba-4364-af6d-951acb5c70f9
+    stack_component_id: 81b38498-bd49-4b5b-9f51-5bdb2bd9f049
     services:
     - name: mongo-service
       release:
         artifacts:
           image:
-            stack_artifact_id: 5069daa9-a30f-4434-bf7c-435060b1c973
+            stack_artifact_id: 5549dddb-a0a5-4453-8154-4b126b0a7d0d
 EOL
 
 #    APL_RELEASE_CREATE_RESULT_JSON=$(./apl releases create \
