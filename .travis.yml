@@ -3,6 +3,6 @@ script:
   - bash ./ci_deploy.sh
 env:
   global:
-  - APL_STACK_NAME: "Acme Air Travel Application"
-  - APL_RELEASE_VERSION: 1
-  - APL_COMPONENT_NAME: "node"
+  - APL_STACK_NAME="Acme Air Travel Application"
+  - APL_RELEASE_VERSION=1
+  - APL_COMPONENT_NAME="node"
