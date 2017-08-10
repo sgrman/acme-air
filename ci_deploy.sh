@@ -33,7 +33,6 @@ APL_STACK_NAME=${APL_STACK_NAME:?Missing required env var} #The machine name of 
 APL_RELEASE_VERSION=${APL_RELEASE_VERSION:?Missing required env var} #The integer version of the release
 APL_COMPONENT_NAME=${APL_COMPONENT_NAME:?Missing required env var} #The name given for the component to be updated in appLariat
 
-
 set +e
 
 #We will look up the necessary info based on envvars
@@ -106,14 +105,12 @@ DEPLOYMENT_NAME=${APL_ARTIFACT_NAME}
 
 #Lookup APL PLATFORM ids
 if [ -z $APL_LOC_DEPLOY_ID ]; then
-  APL_LOC_DEPLOY_ID=$(./apl loc-deploys -o json | ./jq -r '.[0].id')
+  APL_LOC_DEPLOY_ID=$(./apl loc-deploys --name $APL_LOC_DEPLOY_NAME -o json | ./jq -r '.[0].id')
 fi
 if [ -z $APL_LOC_ARTIFACT_ID ]; then
   APL_LOC_ARTIFACT_ID=$(./apl loc-artifacts --name $APL_LOC_ARTIFACT_NAME -o json | ./jq -r '.[0].id')
 fi
 
-#convert stack display name to machine name
-APL_STACK_NAME=$(echo ${APL_STACK_NAME} | tr -d ' ' | tr '[:upper:]' '[:lower:]')
 #Lookup APL Stack info
 if [ -z $APL_STACK_ID ]; then
   APL_STACK_ID=$(./apl stacks --name $APL_STACK_NAME -o json | ./jq -r '.[0].id')
@@ -269,15 +266,15 @@ if [ -z $APL_DEPLOYMENT_ID ]; then
   exit
 else
   echo "Tracking Deployment Status"
-  state=$(apl deployments get $APL_DEPLOYMENT_ID -o json | ./jq -r '.status.state')
-  while [[ $(apl deployments get $APL_DEPLOYMENT_ID -o json | ./jq -r '.status.state') =~ ^(queued|deploying|pending)$ ]]; do
+  state=$(./apl deployments get $APL_DEPLOYMENT_ID -o json | ./jq -r '.status.state')
+  while [[ $(./apl deployments get $APL_DEPLOYMENT_ID -o json | ./jq -r '.status.state') =~ ^(queued|deploying|pending)$ ]]; do
       echo "Deployment Pending"
       sleep 30
   done
   echo "Deployment completed with the following info:"
   echo "Details:"
   echo
-  apl deployments get $APL_DEPLOYMENT_ID -o json | 
+  ./apl deployments get $APL_DEPLOYMENT_ID -o json | 
     ./jq '.status | { name: .namespace, state: .state, description: .description, services: .components[].services[]}'
 fi
 COMMENT
