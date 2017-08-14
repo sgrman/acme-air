@@ -105,12 +105,14 @@ DEPLOYMENT_NAME=${APL_ARTIFACT_NAME}
 
 #Lookup APL PLATFORM ids
 if [ -z $APL_LOC_DEPLOY_ID ]; then
-  APL_LOC_DEPLOY_ID=$(./apl loc-deploys --name $APL_LOC_DEPLOY_NAME -o json | ./jq -r '.[0].id')
+  APL_LOC_DEPLOY_ID=$(./apl loc-deploys -o json | ./jq -r '.[0].id')
 fi
 if [ -z $APL_LOC_ARTIFACT_ID ]; then
   APL_LOC_ARTIFACT_ID=$(./apl loc-artifacts --name $APL_LOC_ARTIFACT_NAME -o json | ./jq -r '.[0].id')
 fi
 
+#convert stack display name to machine name
+APL_STACK_NAME=$(echo ${APL_STACK_NAME} | tr -d ' ' | tr '[:upper:]' '[:lower:]')
 #Lookup APL Stack info
 if [ -z $APL_STACK_ID ]; then
   APL_STACK_ID=$(./apl stacks --name $APL_STACK_NAME -o json | ./jq -r '.[0].id')
