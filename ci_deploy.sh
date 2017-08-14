@@ -14,7 +14,7 @@ JOB_TAG=${TRAVIS_TAG}
 JOB_COMMIT=${TRAVIS_COMMIT}
 
 #appLariat CLI Version to download
-APL_CLI_VER=${APL_CLI_VER:-v0.2.0}
+APL_CLI_VER=${APL_CLI_VER:-v0.2.4}
 
 #Project variables
 CREATE_RELEASE=${CREATE_RELEASE:-false}
@@ -105,7 +105,7 @@ DEPLOYMENT_NAME=${APL_ARTIFACT_NAME}
 
 #Lookup APL PLATFORM ids
 if [ -z $APL_LOC_DEPLOY_ID ]; then
-  APL_LOC_DEPLOY_ID=$(./apl loc-deploys --name $APL_LOC_DEPLOY_NAME -o json | ./jq -r '.[0].id')
+  APL_LOC_DEPLOY_ID=$(./apl loc-deploys -o json | ./jq -r '.[0].id')
 fi
 if [ -z $APL_LOC_ARTIFACT_ID ]; then
   APL_LOC_ARTIFACT_ID=$(./apl loc-artifacts --name $APL_LOC_ARTIFACT_NAME -o json | ./jq -r '.[0].id')
