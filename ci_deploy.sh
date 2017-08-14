@@ -14,7 +14,7 @@ JOB_TAG=${TRAVIS_TAG}
 JOB_COMMIT=${TRAVIS_COMMIT}
 
 #appLariat CLI Version to download
-APL_CLI_VER=${APL_CLI_VER:-v0.2.4}
+APL_CLI_VER=${APL_CLI_VER:-v0.2.0}
 
 #Project variables
 CREATE_RELEASE=${CREATE_RELEASE:-false}
