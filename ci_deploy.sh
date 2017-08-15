@@ -51,6 +51,12 @@ echo "JOB_BRANCH: $JOB_BRANCH"
 echo "JOB_TAG: $JOB_TAG"
 echo "JOB_COMMIT: $JOB_COMMIT"
 
+if [[ ${JOB_BRANCH} != "develop" ]]; then
+	echo
+	echo "Only deploying to appLariat on commits to develop, exiting"
+	exit
+fi
+
 if [ ! -z "$JOB_TAG" ]; then
     APL_ARTIFACT_NAME="staging-${JOB_TAG}"
     CODE_LOC=${JOB_TAG}
