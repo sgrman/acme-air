@@ -51,9 +51,9 @@ echo "JOB_BRANCH: $JOB_BRANCH"
 echo "JOB_TAG: $JOB_TAG"
 echo "JOB_COMMIT: $JOB_COMMIT"
 
-if [[ ${JOB_BRANCH} != "develop" ]]; then
+if [[ ${JOB_BRANCH} != "develop" ]] && [ -z ${JOB_TAG} ]; then
 	echo
-	echo "Only deploying to appLariat on commits to develop, exiting"
+	echo "Only deploying to appLariat when tagged or on commits to develop, exiting"
 	exit
 fi
 
