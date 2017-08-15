@@ -13,6 +13,11 @@ JOB_BRANCH=${TRAVIS_BRANCH:-Testing}
 JOB_TAG=${TRAVIS_TAG}
 JOB_COMMIT=${TRAVIS_COMMIT}
 
+if [[ ${JOB_BRANCH} != "develop" ]]; then
+	echo "Only deploying to appLariat on commits to develop, exiting"
+	exit
+fi
+
 #appLariat CLI Version to download
 APL_CLI_VER=${APL_CLI_VER:-v0.2.0}
 
