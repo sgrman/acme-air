@@ -14,17 +14,25 @@ JOB_TAG=${TRAVIS_TAG}
 JOB_COMMIT=${TRAVIS_COMMIT}
 
 #appLariat CLI Version to download
-APL_CLI_VER=${APL_CLI_VER:-v0.2.0}
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    OS_TYPE=darwin
+else
+	OS_TYPE=linux
+fi
+FIND_LATEST="https://api.github.com/repos/applariat/go-apl/releases/latest"
+DOWNLOAD_URL=$(wget -qO- ${FIND_LATEST} | grep browser_download_url | grep ${OS_TYPE} | head -n 1 | cut -d '"' -f 4)
+APL_CLI_VER=$(echo $DOWNLOAD_URL | awk -F"/" '{print $(NF - 1)}')
+APL_FILE=$(echo $DOWNLOAD_URL | awk -F"/" '{print $NF}')
 
 #Project variables
 CREATE_RELEASE=${CREATE_RELEASE:-false}
-REPO_NAME=${REPO_NAME:-acme-air} 
+REPO_NAME=${REPO_NAME:-acme-air}
 REPO_PATH="https://github.com/applariat/${REPO_NAME}/archive"
 
 #APL Platform variables
 #Required as env variable inputs from CI
 APL_LOC_DEPLOY_NAME=${APL_LOC_DEPLOY_NAME}
-APL_LOC_ARTIFACT_NAME=${APL_LOC_ARTIFACT_NAME:-simple-url}
+APL_LOC_ARTIFACT_NAME=${APL_LOC_ARTIFACT_NAME}
 WORKLOAD_TYPE=${WORKLOAD_TYPE:-level2}
 
 #APL STACK variables
@@ -51,12 +59,6 @@ echo "JOB_BRANCH: $JOB_BRANCH"
 echo "JOB_TAG: $JOB_TAG"
 echo "JOB_COMMIT: $JOB_COMMIT"
 
-if [[ ${JOB_BRANCH} != "develop" ]] && [ -z ${JOB_TAG} ]; then
-	echo
-	echo "Only deploying to appLariat when tagged or on commits to develop, exiting"
-	exit
-fi
-
 if [ ! -z "$JOB_TAG" ]; then
     APL_ARTIFACT_NAME="staging-${JOB_TAG}"
     CODE_LOC=${JOB_TAG}
@@ -69,7 +71,7 @@ else
     WORKLOAD_TYPE=level2
 fi
 
-## Make the name domain safe.
+## Make sure the name is domain safe.
 APL_ARTIFACT_NAME=${APL_ARTIFACT_NAME//[^A-Za-z0-9\\-]/-}
 
 DEPLOYMENT_NAME=${APL_ARTIFACT_NAME}
@@ -85,6 +87,8 @@ DEPLOYMENT_NAME=${APL_ARTIFACT_NAME}
   echo "Downloading cli: https://github.com/applariat/go-apl/releases/download/${APL_CLI_VER}/${APL_FILE}"
   wget -q https://github.com/applariat/go-apl/releases/download/${APL_CLI_VER}/${APL_FILE}
   tar zxf ${APL_FILE}
+  mv bin/apl .
+  echo "Running APL Version - $(./apl version)"
 #fi
 #Confirm jq is available
 #if ! [ `command -v jq` ]; then
@@ -96,7 +100,7 @@ DEPLOYMENT_NAME=${APL_ARTIFACT_NAME}
     fi
     echo "Downloading jq: https://github.com/stedolan/jq/releases/download/jq-1.5/${JQ_TOOL}"
     wget -q https://github.com/stedolan/jq/releases/download/jq-1.5/${JQ_TOOL}
-    
+
     if [ -f ${JQ_TOOL} ]; then
       echo "Download complete, installing jq command"
       chmod +x ${JQ_TOOL}
@@ -113,11 +117,11 @@ DEPLOYMENT_NAME=${APL_ARTIFACT_NAME}
 if [ -z $APL_LOC_DEPLOY_ID ]; then
   APL_LOC_DEPLOY_ID=$(./apl loc-deploys -o json | ./jq -r '.[0].id')
 fi
-if [ -z $APL_LOC_ARTIFACT_ID ]; then
+if [ ! -z ${APL_LOC_ARTIFACT_NAME} ]; then
   APL_LOC_ARTIFACT_ID=$(./apl loc-artifacts --name $APL_LOC_ARTIFACT_NAME -o json | ./jq -r '.[0].id')
 fi
 
-#convert stack display name to machine name
+#Just in case make sure to convert stack display name to machine name
 APL_STACK_NAME=$(echo ${APL_STACK_NAME} | tr -d ' ' | tr '[:upper:]' '[:lower:]')
 #Lookup APL Stack info
 if [ -z $APL_STACK_ID ]; then
@@ -132,25 +136,33 @@ if [ -z $APL_RELEASE_ID ]; then
     RELEASE_REC=$(echo ${RELEASE_LIST} | \
       ./jq -c --argjson rv $APL_RELEASE_VERSION '.[] | select(.version == $rv) ')
     #echo $RELEASE_REC
-    APL_RELEASE_ID=$(echo ${RELEASE_LIST} | \
-      ./jq -r --argjson rv $APL_RELEASE_VERSION '.[] | select(.version == $rv) | .id')
+    APL_RELEASE_ID=$(echo ${RELEASE_REC} | \
+      ./jq -r '.id')
     #echo $APL_RELEASE_ID
-    APL_STACK_VERSION_ID=$(echo ${RELEASE_LIST} | \
-      ./jq -r --arg rid ${APL_RELEASE_ID} '.[] | select(.id == $rid) | .stack_version_id')
+    APL_STACK_VERSION_ID=$(echo ${RELEASE_REC} | \
+      ./jq -r '.stack_version_id')
     #echo $APL_STACK_VERSION_ID
-    APL_STACK_COMPONENT_ID=$(echo ${RELEASE_LIST} | \
-      ./jq -r --arg rid ${APL_RELEASE_ID} --arg cname $APL_COMPONENT_NAME '.[] | select(.id == $rid) | .components[] | select(.name == $cname) | .stack_component_id')
+    APL_STACK_COMPONENT_REC=$(echo ${RELEASE_REC} | \
+      ./jq -r --arg cname $APL_COMPONENT_NAME '.components[] | select(.name == $cname)')
+    APL_STACK_COMPONENT_ID=$(echo ${APL_STACK_COMPONENT_REC} | \
+      ./jq -r '.stack_component_id')
     #echo $APL_STACK_COMPONENT_ID
-    APL_COMP_SERVICE_NAME=$(echo ${RELEASE_LIST} | \
-      ./jq -r --arg rid ${APL_RELEASE_ID} --arg cname $APL_COMPONENT_NAME '.[] | select(.id == $rid) | .components[] | select(.name == $cname) | .services[0].name')
+    APL_COMP_SERVICE_NAME=$(echo ${APL_STACK_COMPONENT_REC} | \
+      ./jq -r '.services[0].name')
     #echo $APL_COMP_SERVICE_NAME
     #Get the artifact type for the component
-    APL_ARTIFACT_TYPE=$(echo ${RELEASE_LIST} | \
-      ./jq -rc --arg rid $APL_RELEASE_ID --arg cname $APL_COMPONENT_NAME '.[] | select(.id == $rid) | .components[] | select(.name == $cname) | .services[0].build.artifacts | keys | 
+    APL_ARTIFACT_TYPE=$(echo ${APL_STACK_COMPONENT_REC} | \
+      ./jq -r '.services[0].build.artifacts | keys |
       if contains(["code"]) then "code" elif contains(["builder"]) then "builder" else "image" end')
     #echo $APL_ARTIFACT_TYPE
+    if [ -z ${APL_LOC_ARTIFACT_ID} ]; then
+        CUR_STACK_ARTIFACT_ID=$(echo ${APL_STACK_COMPONENT_REC} | \
+          ./jq -r .services[0].build.artifacts |  if has("code") then .code elif has("builder") then .builder else .image end')
+        SA_REC=$(./apl stack-artifacts get CUR_STACK_ARTIFACT_ID -o json)
+        APL_LOC_ARTIFACT_ID=$(echo ${SA_REC} | ./jq -r '.loc_artifact_id')
+    fi
 fi
-   
+
 #Submit to appLariat
 #First register the new artifact
 echo
@@ -169,7 +181,7 @@ else
     echo "ERROR: ${SA_CREATE}"
     exit 1
 fi
-    
+
 #Second, if this is a TAGGED build, create a release
 if [[ $CREATE_RELEASE == true ]]; then
     echo
@@ -178,7 +190,7 @@ if [[ $CREATE_RELEASE == true ]]; then
       ./jq -r '.components | length')
     COUNTER=0
     COMPONENTS=()
-    
+
     while [ $COUNTER -lt $NUM_COMPS ]; do
 		comp_id=$(echo ${RELEASE_REC} | ./jq -r ".components[$COUNTER].stack_component_id")
 		svc_name=$(echo ${RELEASE_REC} | ./jq -r ".components[$COUNTER].services[0].name")
@@ -190,26 +202,26 @@ if [[ $CREATE_RELEASE == true ]]; then
 			comp+=(StackArtifactID=${STACK_ARTIFACT_ID})
 			artifacts=$(echo ${artifacts} | ./jq -c --arg art ${APL_ARTIFACT_TYPE} 'with_entries(select(.key != $art))')
 			comp+=( `echo ${artifacts} | ./jq -r 'map_values("StackArtifactID=" + .) |to_entries|.[].value'` )
-		
+
 			COMPONENTS[$COUNTER]=$(IFS=, ; echo "${comp[*]}")
 		else
 			#reuse the values for the current release
 			comp=(StackComponentID=${comp_id})
 			comp+=(ServiceName=${svc_name})
 			comp+=( `echo ${artifacts} | ./jq -r 'map_values("StackArtifactID=" + .) |to_entries|.[].value'` )
-		
+
 			COMPONENTS[$COUNTER]=$(IFS=, ; echo "${comp[*]}")
-		fi 
+		fi
 		let COUNTER+=1
 	done
     #echo ${COMPONENTS[@]}
-    
+
     #construct release command
     rel_flds=( "--name ${APL_ARTIFACT_NAME}" "--stack-id ${APL_STACK_ID}" "--stack-version-id ${APL_STACK_VERSION_ID}" )
     for c in ${COMPONENTS[@]}; do
         rel_flds+=( "--component $c" )
     done
-    
+
     echo "Submitting the release"
     APL_RELEASE_CREATE=$(./apl releases create -o json ${rel_flds[@]})
 
@@ -248,7 +260,7 @@ components:
           ${APL_ARTIFACT_TYPE}: ${STACK_ARTIFACT_ID}
 EOL
 
-	DEPLOY_COMMAND="./apl deployments create -f deploy.yaml -o json" 
+	DEPLOY_COMMAND="./apl deployments create -f deploy.yaml -o json"
 fi
 
 echo "Submitting the deployment"
@@ -282,7 +294,7 @@ else
   echo "Deployment completed with the following info:"
   echo "Details:"
   echo
-  ./apl deployments get $APL_DEPLOYMENT_ID -o json | 
+  ./apl deployments get $APL_DEPLOYMENT_ID -o json |
     ./jq '.status | { name: .namespace, state: .state, description: .description, services: .components[].services[]}'
 fi
 COMMENT
@@ -290,6 +302,6 @@ COMMENT
 end=`date +%s`
 runtime=$((end-start))
 echo
-echo "APL Deployed: 
+echo "APL Deployed:
 	Name = $DEPLOYMENT_NAME
   	ID = $APL_DEPLOYMENT_ID"
