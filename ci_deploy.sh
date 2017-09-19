@@ -6,7 +6,7 @@
 #APL_SERVICE_USER
 #APL_SERVICE_PASS
 start=`date +%s`
-set -e # Exit with nonzero exit code if anything fails
+#set -e # Exit with nonzero exit code if anything fails
 
 #Map CI specific Variables to limit changes below
 JOB_BRANCH=${TRAVIS_BRANCH:-Testing}
