@@ -1,6 +1,6 @@
 language: generic # don't install any environment
 script:
-  - bash ./ci_deploy.sh
+  - /bin/bash ./ci_deploy.sh
 env:
   global:
   - APL_STACK_NAME="Acme Air Travel Application"
