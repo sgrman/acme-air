@@ -6,7 +6,7 @@
 #APL_SERVICE_USER
 #APL_SERVICE_PASS
 start=`date +%s`
-set -e # Exit with nonzero exit code if anything fails
+#set -e # Exit with nonzero exit code if anything fails
 
 #Map CI specific Variables to limit changes below
 JOB_BRANCH=${TRAVIS_BRANCH:-Testing}
@@ -81,10 +81,10 @@ DEPLOYMENT_NAME=${APL_ARTIFACT_NAME}
 #Check the environment
 #Install apl command
 #if ! [ `command -v apl` ]; then
-  APL_FILE=apl-${APL_CLI_VER}-linux_amd64.tgz
-  if [[ "$OSTYPE" == "darwin"* ]]; then
-    APL_FILE=apl-${APL_CLI_VER}-darwin_amd64.tgz
-  fi
+  #APL_FILE=apl-${APL_CLI_VER}-linux_amd64.tgz
+  #if [[ "$OSTYPE" == "darwin"* ]]; then
+  #  APL_FILE=apl-${APL_CLI_VER}-darwin_amd64.tgz
+  #fi
   echo
   echo "Downloading cli: $DOWNLOAD_URL"
   wget -q $DOWNLOAD_URL
