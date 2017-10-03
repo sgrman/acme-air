@@ -165,6 +165,7 @@ if [ -z $APL_RELEASE_ID ]; then
           ./jq -r '.services[0].build.artifacts |  if has("code") then .code elif has("builder") then .builder else .image end')
         SA_REC=$(./apl stack-artifacts get $CUR_STACK_ARTIFACT_ID -o json)
         APL_LOC_ARTIFACT_ID=$(echo ${SA_REC} | ./jq -r '.loc_artifact_id')
+	echo "Using Current Artifact Location with id: $APL_LOC_ARTIFACT_ID"
     fi
 fi
 
