@@ -84,8 +84,8 @@ DEPLOYMENT_NAME=${APL_ARTIFACT_NAME}
     APL_FILE=apl-${APL_CLI_VER}-darwin_amd64.tgz
   fi
   echo
-  echo "Downloading cli: https://github.com/applariat/go-apl/releases/download/${APL_CLI_VER}/${APL_FILE}"
-  wget -q https://github.com/applariat/go-apl/releases/download/${APL_CLI_VER}/${APL_FILE}
+  echo "Downloading cli: $DOWNLOAD_URL"
+  wget -q $DOWNLOAD_URL
   tar zxf ${APL_FILE}
   mv bin/apl .
   echo "Running APL Version - $(./apl version)"
