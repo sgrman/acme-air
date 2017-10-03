@@ -21,7 +21,8 @@ else
 fi
 FIND_LATEST="https://api.github.com/repos/applariat/go-apl/releases/latest"
 #DOWNLOAD_URL=$(wget -qO- ${FIND_LATEST} | grep browser_download_url | grep ${OS_TYPE} | head -n 1 | cut -d '"' -f 4)
-DOWNLOAD_URL=$(wget -q -S -O - ${FIND_LATEST} | grep browser_download_url | grep ${OS_TYPE} | head -n 1 | cut -d '"' -f 4)
+wget -q -O - ${FIND_LATEST}
+DOWNLOAD_URL=$(wget -q -O - ${FIND_LATEST} | grep browser_download_url | grep ${OS_TYPE} | head -n 1 | cut -d '"' -f 4)
 echo $DOWNLOAD_URL
 APL_CLI_VER=$(echo "$DOWNLOAD_URL" | cut -d '/' -f 8)
 APL_FILE=$(echo $DOWNLOAD_URL | cut -d '/' -f 9)
