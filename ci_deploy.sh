@@ -6,7 +6,7 @@
 #APL_SERVICE_USER
 #APL_SERVICE_PASS
 start=`date +%s`
-set -e # Exit with nonzero exit code if anything fails
+#set -e # Exit with nonzero exit code if anything fails
 
 #Map CI specific Variables to limit changes below
 JOB_BRANCH=${TRAVIS_BRANCH:-Testing}
@@ -61,6 +61,12 @@ echo "JOB_BRANCH: $JOB_BRANCH"
 echo "JOB_TAG: $JOB_TAG"
 echo "JOB_COMMIT: $JOB_COMMIT"
 
+if [[ ${JOB_BRANCH} != "develop" ]] && [ -z ${JOB_TAG} ]; then
+	echo
+	echo "Only deploying to appLariat when tagged or on commits to develop, exiting"
+	exit
+fi
+
 if [ ! -z "$JOB_TAG" ]; then
     APL_ARTIFACT_NAME="staging-${JOB_TAG}"
     CODE_LOC=${JOB_TAG}
@@ -81,10 +87,10 @@ DEPLOYMENT_NAME=${APL_ARTIFACT_NAME}
 #Check the environment
 #Install apl command
 #if ! [ `command -v apl` ]; then
-  APL_FILE=apl-${APL_CLI_VER}-linux_amd64.tgz
-  if [[ "$OSTYPE" == "darwin"* ]]; then
-    APL_FILE=apl-${APL_CLI_VER}-darwin_amd64.tgz
-  fi
+  #APL_FILE=apl-${APL_CLI_VER}-linux_amd64.tgz
+  #if [[ "$OSTYPE" == "darwin"* ]]; then
+  #  APL_FILE=apl-${APL_CLI_VER}-darwin_amd64.tgz
+  #fi
   echo
   echo "Downloading cli: $DOWNLOAD_URL"
   wget -q $DOWNLOAD_URL
