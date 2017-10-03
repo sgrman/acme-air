@@ -17,12 +17,13 @@ JOB_COMMIT=${TRAVIS_COMMIT}
 if [[ "$OSTYPE" == "darwin"* ]]; then
     OS_TYPE=darwin
 else
-	OS_TYPE=linux
+    OS_TYPE=linux
 fi
 FIND_LATEST="https://api.github.com/repos/applariat/go-apl/releases/latest"
-DOWNLOAD_URL=$(wget -qO- ${FIND_LATEST} | grep browser_download_url | grep ${OS_TYPE} | head -n 1 | cut -d '"' -f 4)
-APL_CLI_VER=$(echo $DOWNLOAD_URL | awk -F"/" '{print $(NF - 1)}')
-#APL_FILE=$(echo $DOWNLOAD_URL | awk -F"/" '{print $NF}')
+#DOWNLOAD_URL=$(wget -qO- ${FIND_LATEST} | grep browser_download_url | grep ${OS_TYPE} | head -n 1 | cut -d '"' -f 4)
+DOWNLOAD_URL="https://github.com/applariat/go-apl/releases/download/v0.2.8/apl-v0.2.8-linux_amd64.tgz"
+echo $DOWNLOAD_URL
+APL_CLI_VER=$(echo "$DOWNLOAD_URL" | cut -d '/' -f 8)
 APL_FILE=$(echo $DOWNLOAD_URL | cut -d '/' -f 9)
 
 #Project variables
@@ -117,9 +118,11 @@ DEPLOYMENT_NAME=${APL_ARTIFACT_NAME}
 #Lookup APL PLATFORM ids
 if [ -z $APL_LOC_DEPLOY_ID ]; then
   APL_LOC_DEPLOY_ID=$(./apl loc-deploys -o json | ./jq -r '.[0].id')
+  echo "Using Default Deployment Location with id $APL_LOC_DEPLOY_ID"
 fi
 if [ ! -z ${APL_LOC_ARTIFACT_NAME} ]; then
   APL_LOC_ARTIFACT_ID=$(./apl loc-artifacts --name $APL_LOC_ARTIFACT_NAME -o json | ./jq -r '.[0].id')
+  echo "Using Artifact Location with $APL_LOC_ARTIFACT_NAME and id: $APL_LOC_ARTIFACT_ID"
 fi
 
 #Just in case make sure to convert stack display name to machine name
@@ -127,6 +130,7 @@ APL_STACK_NAME=$(echo ${APL_STACK_NAME} | tr -d ' ' | tr '[:upper:]' '[:lower:]'
 #Lookup APL Stack info
 if [ -z $APL_STACK_ID ]; then
   APL_STACK_ID=$(./apl stacks --name $APL_STACK_NAME -o json | ./jq -r '.[0].id')
+  echo "Found $APL_STACK_NAME with id: $APL_STACK_ID"
 fi
 #We have to lookup several items from the release record, so we will load the records and then parse
 RELEASE_LIST=$(./apl releases --stack-id $APL_STACK_ID -o json)
@@ -158,9 +162,10 @@ if [ -z $APL_RELEASE_ID ]; then
     #echo $APL_ARTIFACT_TYPE
     if [ -z ${APL_LOC_ARTIFACT_ID} ]; then
         CUR_STACK_ARTIFACT_ID=$(echo ${APL_STACK_COMPONENT_REC} | \
-          ./jq -r .services[0].build.artifacts |  if has("code") then .code elif has("builder") then .builder else .image end')
-        SA_REC=$(./apl stack-artifacts get CUR_STACK_ARTIFACT_ID -o json)
+          ./jq -r '.services[0].build.artifacts |  if has("code") then .code elif has("builder") then .builder else .image end')
+        SA_REC=$(./apl stack-artifacts get $CUR_STACK_ARTIFACT_ID -o json)
         APL_LOC_ARTIFACT_ID=$(echo ${SA_REC} | ./jq -r '.loc_artifact_id')
+	echo "Using Current Artifact Location with id: $APL_LOC_ARTIFACT_ID"
     fi
 fi
 
